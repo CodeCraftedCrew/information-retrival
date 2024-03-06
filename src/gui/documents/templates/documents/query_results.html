@@ -1,0 +1,55 @@
+{% extends 'model.html' %}
+
+{% block content %}
+    <p style="font-size: small;">Consult processed in {{time}} seconds.</p>
+    {% if docs %}
+        {% if model == 'Vectorial' and retroalimentation %}
+            <form action="{% url 'model' model dataset %}?size={{size}}&retroalimentation=on&q={{q}}" method="POST">
+                {% csrf_token %}
+                <div class="row">
+                    <h3>Search Results</h3>
+                    <button class="btn blue-btn extended" type="submit">Send retroalimentation</button>
+                </div>
+                {% for doc in docs %}
+                    <div class="card">
+                        <div class="card-header row">
+                            <p><b>ID:</b> {{doc.id}}</p>
+                            <div>
+                                <select name="retro">
+                                    <option value="{{doc.id}} irrelevant" selected>Irrelevant</option>
+                                    <option value="{{doc.id}} relevant">Relevant</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="container section">
+                            {% if doc.title != None %}<p><b>Title:</b> {{doc.title}}</p>{% endif %}
+                            {% if doc.author != None %}<p><b>Author:</b> {{doc.author}}</p>{% endif %}
+                            <p class="content">{{doc.content}}</p>
+                            {% if doc.bibliography != None %}<p><b>Bibliography:</b> {{doc.bibliography}}</p>{% endif %}
+                            <br><br>
+                        </div>
+                    </div>
+                {% endfor %}
+            </form>
+
+        {% else %}
+            <h3>Search Results</h3>
+            {% for doc in docs %}
+                <div class="card">
+                    <div class="card-header row">
+                        <p><b>ID:</b> {{doc.id}}</p>
+                    </div>
+                    <div class="container section">
+                        {% if doc.title != None %}<p><b>Title:</b> {{doc.title}}</p>{% endif %}
+                        {% if doc.author != None %}<p><b>Author:</b> {{doc.author}}</p>{% endif %}
+                        <p class="content">{{doc.content}}</p>
+                        {% if doc.bibliography != None %}<p><b>Bibliography:</b> {{doc.bibliography}}</p>{% endif %}
+                        <br><br>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% else %}
+        <h3>No results to show</h3>
+    {% endif %}
+{% endblock %}

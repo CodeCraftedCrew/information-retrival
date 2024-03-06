@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+
+    {% load bootstrap5 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+</head>
+
+<body>
+    <div class="container">
+        <div class="section-column">
+            <form action="{% url 'choose' %}" method="POST">
+                <div class="container row">
+                    <h1>Select a model</h1>
+                    <select class="dropdown" name="dataset">
+                        <option value="cran" selected>Cran</option>
+                        <option value="imdb">IMDB</option>
+                        <option value="newsgroup">Newsgroup</option>
+                        <option value="med">Med</option>
+                    </select>
+                </div>
+                <div>
+                    <div class="card">
+                        <div class="container row">
+                            <h2>Boolean model</h2>
+                            <input type="radio" name="model" value="Boolean" checked>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="container row">
+                            <h2>Generalized vector model</h2>
+                            <input type="radio" name="model" value="Vectorial">
+                        </div>
+                    </div>
+                </div>
+                <div class="right">
+                    <button class="btn blue-btn">Next</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>

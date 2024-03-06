@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+</head>
+
+<body>
+    <div style="margin: 50px">
+        <form action="{% url 'model' model dataset %}" method="get">
+            <div class="dotted-border container">
+                <div class="row">
+                    <h2>Customize model</h2>
+                    <div>
+                        <label>Size: </label>
+                        <input type="number" name="size" min="1" value="{{size}}">
+                    </div>
+                </div>
+                <br>
+                {% if model == "Boolean" %}
+                {% if relaxed %}
+                <input type="checkbox" name="relaxed" checked>
+                {% else %}
+                <input type="checkbox" name="relaxed">
+                {% endif %}
+                <label>Relaxed consult</label>
+                {% elif model == "Vectorial" %}
+                {% if retroalimentation %}
+                <input type="checkbox" name="retroalimentation" checked>
+                {% else %}
+                <input type="checkbox" name="retroalimentation">
+                {% endif %}
+                <label>Enable retroalimentation</label>
+                {% elif model == "Probabilistic" %}
+                <label>Retroalimentation iterations: </label>
+                <input type="number" name="iterations" min="1" value="{{iterations}}">
+                {% endif %}
+            </div>
+
+
+            <br><br>
+            {% if q != None %}
+            <textarea class="dotted-border" style="width: 100%; height: 100px; font-size: large;" name="q" type="text"
+                placeholder="Search...">{{ q }}</textarea>
+            {% else %}
+            <textarea class="dotted-border" style="width: 100%; height: 60px; font-size: large;" name="q" type="text"
+                placeholder="Search..."></textarea>
+            {% endif %}
+            <br>
+            <div class="right">
+                <button class="btn blue-btn" type="submit">Search</button>
+                <a class="btn gray-btn" href="{% url 'home' %}">Back</a>
+            </div>
+            <br> <br>
+        </form>
+
+        {% block content %} {% endblock %}
+    </div>
+</body>
+
+</html>
