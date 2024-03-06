@@ -7,10 +7,10 @@ Yisell Martinez Noa C412
 
 ### Booleano
 
-$D$ Conjunto de términos indexados
-$Q$ Expresion booleana sobre los términos indexados utilizando las operaciones: not, and, or
-$F$ Álgebra booleana sobre conjunto de términos y conjuntos de documentos.
-$R$ Función booleana que indica si el documento $d_j$ es relevante a la consulta $q$.
+$D$ Conjunto de términos indexados.   
+$Q$ Expresion booleana sobre los términos indexados utilizando las operaciones: not, and, or.  
+$F$ Álgebra booleana sobre conjunto de términos y conjuntos de documentos.  
+$R$ Función booleana que indica si el documento $d_j$ es relevante a la consulta $q$.  
 
 En este modelo los pesos de términos indexados son binarios $w_{ij} \in {0,1}$. Una consulta $q$ es una expresión booleana convencional. Sea $\vec{q_{fnd}}$ la Forma Normal Disyuntiva de la consulta $q$ y $\vec{q_{cc}}$ una de las componentes conjuntivas de $\vec{q_{fnd}}$. La similutud entre un documento $\vec{d_j}$ y la consulta q se define como:
 
