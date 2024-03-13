@@ -1,13 +1,11 @@
 from django.shortcuts import redirect, render
 from django.views import View
 
-from core.base_model.query import Query
-from core.boolean_model.boolean_model import BooleanModel
-from core.boolean_model.extended_boolean_model import ExtendedBooleanModel
-
+from code.base_model.query import Query
+from code.boolean_model.boolean_model import BooleanModel
+from code.boolean_model.extended_boolean_model import ExtendedBooleanModel
 
 import time
-
 
 class ModelLoader:
     

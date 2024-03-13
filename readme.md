@@ -1,6 +1,6 @@
 # Sistema de Recuperación de Información
 
-Nahomi Bouza Rodriguez C412
+Nahomi Bouza Rodriguez C412  
 Yisell Martinez Noa C412
 
 ## Descripción del modelo
@@ -20,7 +20,7 @@ $sim(d_j, q) = \{ 1 \; si \;  \exists \vec{q_{cc}}: (\vec{q_{cc}} \in \vec{q_{fn
 
 Usamos las herramientas vistas en clase práctica para el pre-procesamiento de los documentos y queries.
 
-El texto se somete a una tokenización utilizando la biblioteca Spacy, con el objetivo de dividir el texto en unidades significativas. Posteriormente, se lleva a cabo una fase de eliminación de ruido para eliminar caracteres irrelevantes o no deseados. A continuación, se procede a la eliminación de las palabras vacías (stopwords) para reducir la dimensionalidad del texto y concentrarse en las palabras clave. Además, se realiza una normalización de las letras, convirtiendo todas las letras a minúsculas para garantizar la coherencia en el análisis. Finalmente, se lleva a cabo la separación en formas normales disyuntivas para homogeneizar la estructura del texto y facilitar su procesamiento posterior.
+El texto se somete a una tokenización utilizando la biblioteca Spacy, con el objetivo de dividir el texto en unidades significativas. Posteriormente, se lleva a cabo una fase de eliminación de ruido para eliminar caracteres irrelevantes o no deseados. A continuación, se procede a la eliminación de las palabras vacías (stopwords) para reducir la dimensionalidad del texto y concentrarse en las palabras clave y la lemmatización. Además, se realiza una normalización de las letras, convirtiendo todas las letras a minúsculas para garantizar la coherencia en el análisis. Finalmente, se lleva a cabo la separación en formas normales disyuntivas para homogeneizar la estructura del texto y facilitar su procesamiento posterior.
 
 Una vez terminado este pre-procesamiento se determina la relevancia de un documento en función de la cantidad de términos coincidentes entre el documento y la consulta realizada.
 
@@ -70,41 +70,77 @@ Apoyados en lo estudiado en clase práctica desarollamos la clase Metrics, que s
 1. Precisión (Precision):
 
     La precisión se refiere a la proporción de documentos recuperados que son relevantes para la consulta.
+    
     **Interpretación:** Un valor alto de precisión indica que la mayoría de los documentos recuperados son relevantes para la consulta. Es útil cuando se desea minimizar el número de documentos irrelevantes en los resultados.
 
 2. Recall (Recall):
 
-    El recall (también conocido como sensibilidad) se refiere a la proporción de documentos relevantes que fueron recuperados correctamente.
+    El recall (también conocido como sensibilidad) se refiere a la proporción de documentos relevantes que fueron recuperados correctamente. 
+    
     **Interpretación:** Un valor alto de recall indica que la mayoría de los documentos relevantes fueron recuperados. Es útil cuando se desea maximizar la recuperación de documentos relevantes, incluso si eso significa recuperar algunos documentos irrelevantes adicionales.
 
 3. Puntaje F (F1 Score):
 
     El puntaje F es una medida que combina precisión y recall en un solo valor. Se calcula como la media armónica de precisión y recall.
+    
     **Interpretación:** Un valor alto de puntaje F indica un buen equilibrio entre precisión y recall. Es útil cuando se desea una métrica que tenga en cuenta tanto la precisión como la exhaustividad del sistema de recuperación de información.
 
 4. R-Precisión (R-Precision):
 
     La R-precisión se refiere a la precisión calculada considerando los primeros R documentos recuperados, donde R es el número total de documentos relevantes para la consulta.
+
     **Interpretación:** La R-precisión proporciona una medida de la precisión del sistema al considerar solo los primeros documentos recuperados. Es útil cuando se desea evaluar el rendimiento del sistema en los primeros resultados, que son los más relevantes para el usuario.
 
 5. Fallout:
 
     El fallout (también conocido como tasa de falsos positivos) se refiere a la proporción de documentos recuperados que son irrelevantes para la consulta.
+    
     **Interpretación:** Un valor alto de fallout indica que muchos de los documentos recuperados son irrelevantes para la consulta. Es útil cuando se desea evaluar el grado de contaminación en los resultados con documentos irrelevantes.
+
+#### Ejemplo
+
+Consulta: what similarity laws must be obeyed when constructing aeroelastic models of heated high speed aircraft.
+
+Documentos relevantes: ['12', '51', '102', '13', '14', '15', '185', '30', '37', '52', '142', '195', '56', '66', '95', '462', '497', '858', '876', '879', '880']
+
+Documentos recuperados (booleano): []
+Documentos recuperados (booleano extendido): ['51', '874', '486']
+
+    +-------------+-----------+--------------------+
+    | Metric      |   Boolean |   Extended Boolean |
+    +=============+===========+====================+
+    | precision   |     0     |         0.333333   |
+    +-------------+-----------+--------------------+
+    | recall      |     0     |         0.333333   |
+    +-------------+-----------+--------------------+
+    | f1          |     1e-10 |         0.333333   |
+    +-------------+-----------+--------------------+
+    | r-precision |     0     |         0.333333   |
+    +-------------+-----------+--------------------+
+    | fallout     |     0     |         0.00145033 |
+    +-------------+-----------+--------------------+
+
+La **precisión** y el **recall** con el modelo booleano fueron de 0, lo que significa que no se recuperaron documentos relevantes entre los documentos recuperados. Por otro lado, con el modelo booleano extendido fue de aproximadamente 0.33, lo que sugiere que al menos uno de los documentos recuperados era relevante para la consulta.
+    
+El modelo booleano tuvo un **puntaje F1** muy bajo (alrededor de 1e-10), lo que confirma un rendimiento deficiente en términos de precisión y recall. Por otro lado, el modelo booleano extendido tuvo un puntaje F1 de alrededor de 0.33, lo que indica un rendimiento significativamente mejor en comparación con el modelo booleano.
+
+El **fallout** de ambos modelos fue muy bajo, lo que sugiere que hubo muy pocos documentos irrelevantes recuperados en comparación con los relevantes.
+
+En resumen, el modelo **booleano extendido mostró un rendimiento mucho mejor** que el modelo booleano estándar en términos de recuperación de documentos relevantes para la consulta dada.
+
+Aunque el **modelo booleano extendido** mostró cierta mejora en comparación con el modelo booleano estándar, aún se considera **deficiente** en términos de recuperación de documentos relevantes para la consulta.
 
 **Obtención de Evaluaciones para Consultas:** La clase permite obtener las métricas de evaluación para una consulta específica utilizando un modelo de recuperación de información proporcionado. Utiliza los métodos anteriores para calcular las métricas precisión, recall, puntaje F, R-precisión y fallout para la consulta dada.
 
 ### Algoritmo de Recomendaciones
 
-Dentro de la clase Recommendation, el método get_recommendations() obtiene 20 o menos recomendaciones basadas en los resultados de una consulta. Se inicia obteniendo todos los documentos de la base de datos a través del objeto de almacenamiento proporcionado durante la inicialización de la clase. Luego, se extraen los títulos y los géneros de estos documentos para su posterior procesamiento.
+Dentro de la clase Recommendation, el método get_recommendations() obtiene 20 o menos recomendaciones basadas en los resultados de una consulta. Se inicia obteniendo todos los documentos de la base de datos a través del objeto de almacenamiento proporcionado durante la inicialización de la clase.
 
 La vectorización de los títulos se lleva a cabo utilizando TfidfVectorizer, lo que nos permite convertir los títulos en una matriz TF-IDF, una representación numérica que captura la importancia relativa de cada palabra en los títulos.
 
-Una vez que tenemos esta representación numérica de los títulos, calculamos la similitud coseno entre ellos para determinar qué tan similares son entre sí. Esto nos proporciona una medida de similitud que será utilizada más adelante en el proceso de recomendación.
+Una vez que tenemos esta representación numérica de los títulos, calculamos la similitud coseno entre ellos para determinar qué tan similares son entre sí.
 
-Además, se realizan cálculos sobre los géneros de los documentos. Se cuenta la frecuencia de cada género y se seleccionan los cinco más comunes como géneros principales, que se utilizarán en el proceso de recomendación.
-
-Luego, se procede a calcular las recomendaciones de documentos. Para cada documento que no ha sido recuperado, se calcula la similitud coseno promedio con respecto a los documentos recuperados. Esta similitud se combina con el recuento de género del documento (si pertenece a uno de los géneros principales) para generar una puntuación de recomendación.
+Luego, se procede a calcular las recomendaciones de documentos. Para cada documento que no ha sido recuperado, se calcula la suma de las similitudes con los documentos ya recuperados.
 
 Una vez que se han calculado las recomendaciones para todos los documentos, se ordenan según su puntuación y se seleccionan los primeros 20 para ser devueltos como resultado final.
 
